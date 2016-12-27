@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Install Pisi Linux
+Name[pl]=Zainstaluj Pisi Linux (cli)
+GenericName=Cli Installer
+Comment=Install the operating system to disk
+Comment[pl]=Zainstaluj Pisi Linux na swoim komputerze
+Exec=sudo /usr/bin/cli-installer
+Icon=utilities-terminal
+Terminal=true
+Type=Application
+Categories=System;
