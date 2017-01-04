@@ -21,8 +21,8 @@ LAUNCHER = \
 
 all: $(BIN)
 
-edit = sed -e "s|@datadir[@]|$(DESTDIR)$(PREFIX)/share/manjaro-tools|g" \
-	-e "s|@libdir[@]|$(DESTDIR)$(PREFIX)/lib/manjaro-tools|g" \
+edit = sed -e "s|@datadir[@]|$(DESTDIR)$(PREFIX)/share/lime-tools|g" \
+	-e "s|@libdir[@]|$(DESTDIR)$(PREFIX)/lib/lime-tools|g" \
 	-e "s|@VER@|${Version}|"
 
 %: %.in Makefile
@@ -39,11 +39,11 @@ install:
 	install -dm0755 $(DESTDIR)$(PREFIX)/bin
 	install -m0755 ${BIN} $(DESTDIR)$(PREFIX)/bin
 
-	install -dm0755 $(DESTDIR)$(PREFIX)/lib/manjaro-tools
-	install -m0644 ${LIBS} $(DESTDIR)$(PREFIX)/lib/manjaro-tools
+	install -dm0755 $(DESTDIR)$(PREFIX)/lib/lime-tools
+	install -m0644 ${LIBS} $(DESTDIR)$(PREFIX)/lib/lime-tools
 
-	install -dm0755 $(DESTDIR)$(PREFIX)/share/manjaro-tools
-	install -m0644 ${SHARED} $(DESTDIR)$(PREFIX)/share/manjaro-tools
+	install -dm0755 $(DESTDIR)$(PREFIX)/share/lime-tools
+	install -m0644 ${SHARED} $(DESTDIR)$(PREFIX)/share/lime-tools
 
 	install -dm0755 $(DESTDIR)$(PREFIX)/share/applications
 	install -m0644 ${LAUNCHER} $(DESTDIR)$(PREFIX)/share/applications
@@ -51,8 +51,8 @@ install:
 
 uninstall:
 	for f in ${BIN}; do rm -f $(DESTDIR)$(PREFIX)/bin/$$f; done
-	for f in ${SHARED}; do rm -f $(DESTDIR)$(PREFIX)/share/manjaro-tools/$$f; done
-	for f in ${LIBS}; do rm -f $(DESTDIR)$(PREFIX)/lib/manjaro-tools/$$f; done
+	for f in ${SHARED}; do rm -f $(DESTDIR)$(PREFIX)/share/lime-tools/$$f; done
+	for f in ${LIBS}; do rm -f $(DESTDIR)$(PREFIX)/lib/lime-tools/$$f; done
 	for f in ${LAUNCHER}; do rm -f $(DESTDIR)$(PREFIX)/share/applications/$$f; done
 
 install: install

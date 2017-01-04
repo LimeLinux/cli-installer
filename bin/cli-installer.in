@@ -14,7 +14,7 @@ load_profile_config "${DATADIR}/profile.conf"
 
 VER=0.9.2
 # Basis settings
-TITLE="Pisi Linux Installation Framework $VER"
+TITLE="Lime GNU/Linux Installation Framework $VER"
 
 REPO_PATH='/opt/live'
 [[ -d /opt/livecd ]] && REPO_PATH='/opt/livecd'
