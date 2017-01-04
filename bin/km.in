@@ -2,7 +2,7 @@
 # written by Tobias Powalowski <tpowa@archlinux.org>
 # adapted for Cinnarch by Alex Filgueira <faidoc@gmail.com>
 # adapted for Manjaro by Philip Müller <philm@manjaro.org>
-# adapted for pisi by erturk burakerturk@pisillinux.org
+# adapted for lime by erturk 
 
 LIBDIR='@libdir@'
 DATADIR='@datadir@'
