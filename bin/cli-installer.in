@@ -1481,10 +1481,10 @@ autoprepare(){
 		# create actual partitions
 		sgdisk --set-alignment="2048" --new=1:1M:+${GPT_BIOS_GRUB_PART_SIZE}M --typecode=1:EF02 --change-name=1:BIOS_GRUB ${DEVICE} > ${LOG}
 		sgdisk --set-alignment="2048" --new=2:+1M:+${UEFISYS_PART_SIZE}M --typecode=2:EF00 --change-name=2:UEFI_SYSTEM ${DEVICE} > ${LOG}
-		sgdisk --set-alignment="2048" --new=3:+1M:+${BOOT_PART_SIZE}M --typecode=3:8300 --attributes=3:set:2 --change-name=3:PISI_BOOT ${DEVICE} > ${LOG}
-		sgdisk --set-alignment="2048" --new=4:+1M:+${SWAP_PART_SIZE}M --typecode=4:8200 --change-name=4:PISI_SWAP ${DEVICE} > ${LOG}
-		sgdisk --set-alignment="2048" --new=5:+1M:+${ROOT_PART_SIZE}M --typecode=5:8300 --change-name=5:PISI_ROOT ${DEVICE} > ${LOG}
-		sgdisk --set-alignment="2048" --new=6:+1M:0 --typecode=6:8300 --change-name=6:PISI_HOME ${DEVICE} > ${LOG}
+		sgdisk --set-alignment="2048" --new=3:+1M:+${BOOT_PART_SIZE}M --typecode=3:8300 --attributes=3:set:2 --change-name=3:LIME_BOOT ${DEVICE} > ${LOG}
+		sgdisk --set-alignment="2048" --new=4:+1M:+${SWAP_PART_SIZE}M --typecode=4:8200 --change-name=4:LIME_SWAP ${DEVICE} > ${LOG}
+		sgdisk --set-alignment="2048" --new=5:+1M:+${ROOT_PART_SIZE}M --typecode=5:8300 --change-name=5:LIME_ROOT ${DEVICE} > ${LOG}
+		sgdisk --set-alignment="2048" --new=6:+1M:0 --typecode=6:8300 --change-name=6:LIME_HOME ${DEVICE} > ${LOG}
 		sgdisk --print ${DEVICE} > ${LOG}
 	else
 		PART_ROOT="${DEVICE}3"
@@ -1518,10 +1518,10 @@ autoprepare(){
 	## <partnum>:<mountpoint>:<partsize>:<fstype>[:<fsoptions>][:+]:labelname
 	## The partitions in FSSPECS list should be listed in the "mountpoint" order.
 	## Make sure the "root" partition is defined first in the FSSPECS list
-	FSSPECS="3:/:${ROOT_PART_SIZE}:${FSTYPE}:::ROOT_PISI 1:/boot:${BOOT_PART_SIZE}:ext2::+:BOOT_PISI 4:/home:*:${FSTYPE}:::HOME_PISI 2:swap:${SWAP_PART_SIZE}:swap:::SWAP_PISI"
+	FSSPECS="3:/:${ROOT_PART_SIZE}:${FSTYPE}:::ROOT_LIME 1:/boot:${BOOT_PART_SIZE}:ext2::+:BOOT_LIME 4:/home:*:${FSTYPE}:::HOME_LIME 2:swap:${SWAP_PART_SIZE}:swap:::SWAP_LIME"
 
 	if [[ "${GUIDPARAMETER}" == "yes" ]]; then
-		FSSPECS="5:/:${ROOT_PART_SIZE}:${FSTYPE}:::ROOT_PISI 3:/boot:${BOOT_PART_SIZE}:ext2::+:BOOT_PISI 2:/boot/efi:512:vfat:-F32::ESP 6:/home:*:${FSTYPE}:::HOME_PISI 4:swap:${SWAP_PART_SIZE}:swap:::SWAP_PISI"
+		FSSPECS="5:/:${ROOT_PART_SIZE}:${FSTYPE}:::ROOT_LIME 3:/boot:${BOOT_PART_SIZE}:ext2::+:BOOT_LIME 2:/boot/efi:512:vfat:-F32::ESP 6:/home:*:${FSTYPE}:::HOME_LIME 4:swap:${SWAP_PART_SIZE}:swap:::SWAP_LIME"
 	fi
 
 	## make and mount filesystems
@@ -2782,8 +2782,8 @@ EOF
 	NUMBER="0"
 	cat << EOF >> "${DESTDIR}/${GRUB_PREFIX_DIR}/grub.cfg"
 
-# (${NUMBER}) PISI Linux
-menuentry "PISI Linux" {
+# (${NUMBER}) LIME Linux
+menuentry "LIME Linux" {
 	set gfxpayload="keep"
 	${GRUB_ROOT_DRIVE}
 	${LINUX_MOD_COMMAND}
@@ -2796,8 +2796,8 @@ EOF
 	## create kernel fallback entry
 	cat << EOF >> "${DESTDIR}/${GRUB_PREFIX_DIR}/grub.cfg"
 
-# (${NUMBER}) PISI Linux Fallback
-menuentry "PISI Linux Fallback" {
+# (${NUMBER}) LIME Linux Fallback
+menuentry "LIME Linux Fallback" {
 	set gfxpayload="keep"
 	${GRUB_ROOT_DRIVE}
 	${LINUX_MOD_COMMAND}
@@ -3005,7 +3005,7 @@ dogrub_uefi_common(){
 		--directory="/usr/lib/grub/${_UEFI_ARCH}-efi" \
 		--target="${_UEFI_ARCH}-efi" \
 		--efi-directory="/boot/efi" \
-		--bootloader-id="PISI_grub" \
+		--bootloader-id="LIME_grub" \
 		--boot-directory="/boot" \
 		--recheck \
 		--debug &>"/tmp/grub_uefi_${_UEFI_ARCH}_install.log"
@@ -3051,7 +3051,7 @@ fi
 
 EOF
 
-	cp -f "${DESTDIR}/boot/grub/grub.cfg" "${DESTDIR}/boot/efi/EFI/PISI_grub/grub${_SPEC_UEFI_ARCH}_standalone.cfg"
+	cp -f "${DESTDIR}/boot/grub/grub.cfg" "${DESTDIR}/boot/efi/EFI/LIME_grub/grub${_SPEC_UEFI_ARCH}_standalone.cfg"
 	__WD="${PWD}/"
 	cd "${DESTDIR}/"
 	chroot_mount
@@ -3059,16 +3059,16 @@ EOF
 		--directory="/usr/lib/grub/${_UEFI_ARCH}-efi" \
 		--format="${_UEFI_ARCH}-efi" \
 		--compression="xz" \
-		--output="/boot/efi/EFI/PISI_grub/grub${_SPEC_UEFI_ARCH}_standalone.efi" \
+		--output="/boot/efi/EFI/LIME_grub/grub${_SPEC_UEFI_ARCH}_standalone.efi" \
 		"boot/grub/grub.cfg" &>"/tmp/grub_${_UEFI_ARCH}_uefi_mkstandalone.log"
 	chroot_umount
 	cd "${__WD}/"
 	[[ -e "${DESTDIR}/boot/grub/grub.cfg.save" ]] && mv "${DESTDIR}/boot/grub/grub.cfg.save" "${DESTDIR}/boot/grub/grub.cfg"
 	cat "/tmp/grub_uefi_${_UEFI_ARCH}_install.log" >> "${LOG}"
-	if [[ -e "${DESTDIR}/boot/efi/EFI/PISI_grub/grub${_SPEC_UEFI_ARCH}.efi" ]] && \
+	if [[ -e "${DESTDIR}/boot/efi/EFI/LIME_grub/grub${_SPEC_UEFI_ARCH}.efi" ]] && \
 	[[ -e "${DESTDIR}/boot/grub/${_UEFI_ARCH}-efi/core.efi" ]]; then
-		_BOOTMGR_LABEL="PISI Linux (GRUB)"
-		_BOOTMGR_LOADER_DIR="PISI_grub"
+		_BOOTMGR_LABEL="LIME Linux (GRUB)"
+		_BOOTMGR_LOADER_DIR="LIME_grub"
 		_BOOTMGR_LOADER_FILE="grub${_SPEC_UEFI_ARCH}.efi"
 		do_uefi_bootmgr_setup
 		DIALOG --msgbox "GRUB(2) UEFI ${_UEFI_ARCH} has been successfully installed." 0 0
@@ -3077,11 +3077,11 @@ EOF
 		#dogrub_config
 		dogrub_mkconfig
 		GRUB_UEFI=""
-		DIALOG --defaultno --yesno "Do you want to copy /boot/efi/EFI/PISI_grub/grub${_SPEC_UEFI_ARCH}.efi to /boot/efi/EFI/boot/boot${_SPEC_UEFI_ARCH}.efi ?\n\nThis might be needed in some systems where efibootmgr may not work due to firmware issues." 0 0 && _UEFISYS_EFI_BOOT_DIR="1"
+		DIALOG --defaultno --yesno "Do you want to copy /boot/efi/EFI/LIME_grub/grub${_SPEC_UEFI_ARCH}.efi to /boot/efi/EFI/boot/boot${_SPEC_UEFI_ARCH}.efi ?\n\nThis might be needed in some systems where efibootmgr may not work due to firmware issues." 0 0 && _UEFISYS_EFI_BOOT_DIR="1"
 		if [[ "${_UEFISYS_EFI_BOOT_DIR}" == "1" ]]; then
 			mkdir -p "${DESTDIR}/boot/efi/EFI/boot"
 			rm -f "${DESTDIR}/boot/efi/EFI/boot/boot${_SPEC_UEFI_ARCH}.efi"
-			cp -f "${DESTDIR}/boot/efi/EFI/PISI_grub/grub${_SPEC_UEFI_ARCH}.efi" "${DESTDIR}/boot/efi/EFI/boot/boot${_SPEC_UEFI_ARCH}.efi"
+			cp -f "${DESTDIR}/boot/efi/EFI/LIME_grub/grub${_SPEC_UEFI_ARCH}.efi" "${DESTDIR}/boot/efi/EFI/boot/boot${_SPEC_UEFI_ARCH}.efi"
 		fi
 	else
 		DIALOG --msgbox "Error installing GRUB UEFI ${_UEFI_ARCH}.\nCheck /tmp/grub_uefi_${_UEFI_ARCH}_install.log for more info.\n\nYou probably need to install it manually by chrooting into ${DESTDIR}.\nDon't forget to bind /dev, /sys and /proc into ${DESTDIR} before chrooting." 0 0
