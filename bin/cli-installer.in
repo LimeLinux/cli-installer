@@ -3456,7 +3456,6 @@ mainmenu(){
 			DIALOG --infobox "${_installationfinished}" 6 40
 			mkdir -p ${DESTDIR}/var/log/${dist_iso}
 			cp /tmp/*.log ${DESTDIR}/var/log/${dist_iso} &>/dev/null
-			cp /var/log/pacman.log ${DESTDIR}/var/log/${dist_iso}/pacman-live.log &>/dev/null
 			_umountall &>/dev/null ; sleep 1 ; exit 0
 		;;
 		*)
