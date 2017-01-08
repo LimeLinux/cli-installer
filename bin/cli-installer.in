@@ -3107,9 +3107,8 @@ prepare_harddrive(){
 		dialog ${DEFAULT} --backtitle "${TITLE}" --menu "Prepare Hard Drive" 12 60 5 \
 			"1" "Auto-Prepare (erases the ENTIRE hard drive)" \
 			"2" "Partition Hard Drives" \
-			"3" "Create Software Raid, Lvm2 and Luks encryption" \
-			"4" "Set Filesystem Mountpoints" \
-			"5" "Return to Main Menu" 2>${ANSWER} || CANCEL="1"
+			"3" "Set Filesystem Mountpoints" \
+			"4" "Return to Main Menu" 2>${ANSWER} || CANCEL="1"
 		NEXTITEM="$(cat ${ANSWER})"
 		[[ "${S_MKFSAUTO}" = "1" ]] && DONE=1
 		case $(cat ${ANSWER}) in
@@ -3118,17 +3117,16 @@ prepare_harddrive(){
 				[[ "${S_MKFSAUTO}" = "1" ]] && DONE=1
 				CANCEL="0"
 				_hd_is_prepared=1
-				NEXTITEM="5"
+				NEXTITEM="4"
 			;;
 			"2") partition ;;
-			"3") create_special ;;
-			"4")
+			"3")
 				PARTFINISH=""
 				ASK_MOUNTPOINTS="1"
 				mountpoints
 				CANCEL="0"
 				_hd_is_prepared=1
-				NEXTITEM="5"
+				NEXTITEM="4"
 			;;
 			*) DONE=1 ;;
 		esac
