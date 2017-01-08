@@ -12,7 +12,7 @@ load_profile_config "${DATADIR}/profile.conf"
 [[ -r ${LIBDIR}/util-mnt.sh ]] && source ${LIBDIR}/util-mnt.sh
 [[ -r ${LIBDIR}/util-inst.sh ]] && source ${LIBDIR}/util-inst.sh
 
-VER=0.9.2
+VER=0.1.1a
 # Basis settings
 TITLE="Lime GNU/Linux Installation Framework $VER"
 
@@ -54,14 +54,6 @@ VMLINUZ=$(get_linuz)
 INITRAMFS=${default_image#*/boot/}
 INITRAMFS_FALLBACK=${fallback_image#*/boot/}
 
-# abstract the common pacman args
-PACMAN="pacman --root ${DESTDIR} --config /etc/pacman.conf --noconfirm --noprogressbar"
-
-# sources
-SYNC_URL=
-MIRRORLIST="/etc/pacman.d/mirrorlist"
-PACKAGES=
-
 # clock
 HARDWARECLOCK="localtime"
 TIMEZONE="Europe/London"
@@ -98,9 +90,9 @@ NEXTITEM=""
 # activate_dmraid()
 # activate dmraid devices
 activate_dmraid(){
-	if [[ -e /usr/bin/dmraid ]]; then
+	if [[ -e /usr/sbin/dmraid ]]; then
 		DIALOG --infobox "${_activate_dmraid}" 0 0
-		/usr/bin/dmraid -ay -I -Z >/dev/null 2>&1
+		/usr/sbin/dmraid -ay -I -Z >/dev/null 2>&1
 	fi
 }
 
@@ -108,13 +100,13 @@ activate_dmraid(){
 # activate lvm2 devices
 activate_lvm2(){
 	ACTIVATE_LVM2=""
-	if [[ -e /usr/bin/lvm ]]; then
+	if [[ -e /usr/sbin/lvm ]]; then
 		OLD_LVM2_GROUPS=${LVM2_GROUPS}
 		OLD_LVM2_VOLUMES=${LVM2_VOLUMES}
 		DIALOG --infobox "${_scanning_lvm2}" 0 0
-		/usr/bin/lvm vgscan --ignorelockingfailure >/dev/null 2>&1
+		/usr/sbin/lvm vgscan --ignorelockingfailure >/dev/null 2>&1
 		DIALOG --infobox "${_activate_lvm2}" 0 0
-		/usr/bin/lvm vgchange --ignorelockingfailure --ignoremonitoring -ay >/dev/null 2>&1
+		/usr/sbin/lvm vgchange --ignorelockingfailure --ignoremonitoring -ay >/dev/null 2>&1
 		LVM2_GROUPS="$(vgs -o vg_name --noheading 2>/dev/null)"
 		LVM2_VOLUMES="$(lvs -o vg_name,lv_name --noheading --separator - 2>/dev/null)"
 		[[ "${OLD_LVM2_GROUPS}" = "${LVM2_GROUPS}" && "${OLD_LVM2_GROUPS}" = "${LVM2_GROUPS}" ]] && ACTIVATE_LVM2="no"
@@ -139,7 +131,7 @@ activate_raid(){
 # activate luks devices
 activate_luks(){
 	ACTIVATE_LUKS=""
-	if [[ -e /usr/bin/cryptsetup ]]; then
+	if [[ -e /sbin/cryptsetup ]]; then
 		DIALOG --infobox "${_scanning_luks}" 0 0
 		if [[ "$(${_BLKID} | grep "TYPE=\"crypto_LUKS\"")" ]]; then
 			for PART in $(${_BLKID} | grep "TYPE=\"crypto_LUKS\"" | sed -e 's#:.*##g'); do
